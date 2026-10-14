@@ -29,4 +29,12 @@ fn main() {
         .file("resources/libfvad/src/vad/vad_sp.c")
         .file("resources/libfvad/src/fvad.c")
         .compile("libfvad");
+
+    let out_dir = std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap());
+    bindgen::Builder::default()
+        .header("resources/libfvad/include/fvad.h")
+        .generate()
+        .expect("Generate bindings")
+        .write_to_file(out_dir.join("bindings.rs"))
+        .expect("Write bindings to file");
 }
