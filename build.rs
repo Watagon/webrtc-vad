@@ -8,7 +8,7 @@ extern crate cc;
 fn main() {
     if !Path::new("resources/libfvad/.git").exists() {
         let _ = Command::new("git")
-            .args(&["submodule", "update", "--init"])
+            .args(["submodule", "update", "--init"])
             .status();
     }
 

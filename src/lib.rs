@@ -6,6 +6,22 @@ mod bindgen;
 use bindgen::*;
 use std::convert::TryFrom;
 
+#[derive(Debug, PartialEq, Eq)]
+pub enum Error {
+    InvalidFrameLength,
+}
+
+impl ::core::fmt::Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let msg = match self {
+            Error::InvalidFrameLength => "Invalid frame length",
+        };
+        write!(f, "{msg}")
+    }
+}
+
+impl ::std::error::Error for Error {}
+
 pub enum VadMode {
     Quality = 0,
     LowBitrate = 1,
@@ -120,17 +136,18 @@ impl Vad {
     /// length of 10, 20 or 30 ms are supported, so for example at 8 kHz, `buffer.len()`
     /// must be either 80, 160 or 240.
     ///
-    /// Returns              : Ok(true) - (active voice),
-    ///                       Ok(false) - (non-active Voice),
-    ///                       Err(()) - (invalid frame length).
-    pub fn is_voice_segment(&mut self, buffer: &[i16]) -> Result<bool, ()> {
+    /// Returns:
+    ///     Ok(true) - (active voice),
+    ///     Ok(false) - (non-active Voice),
+    ///     Err(Error::InvalidFrameLength) - (invalid frame length).
+    pub fn is_voice_segment(&mut self, buffer: &[i16]) -> Result<bool, Error> {
         let b = &buffer[0] as *const i16;
 
         unsafe {
             match fvad_process(self.fvad, b, buffer.len()) {
                 1 => Ok(true),
                 0 => Ok(false),
-                _ => Err(()),
+                _ => Err(Error::InvalidFrameLength),
             }
         }
     }
