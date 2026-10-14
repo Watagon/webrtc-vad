@@ -2,7 +2,10 @@
 name = "webrtc-vad"
 description = "Rust interface for the WebRTC Voice-Activity-Detction Module"
 version = "0.4.0"
-authors = ["kaegi <kaegi.dev@gmail.com>"]
+authors = [
+    "kaegi <kaegi.dev@gmail.com>",
+    "Watagon <coding.watahiki@gmail.com>",
+]
 edition = "2018"
 keywords = ["voice", "activity", "detection", "ffi", "alass"]
 readme = "README.md"
