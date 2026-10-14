@@ -1,17 +1,8 @@
 // build.rs
 
-use std::path::Path;
-use std::process::Command;
-
 extern crate cc;
 
 fn main() {
-    if !Path::new("resources/libfvad/.git").exists() {
-        let _ = Command::new("git")
-            .args(["submodule", "update", "--init"])
-            .status();
-    }
-
     cc::Build::new()
         .include("resources/libfvad/src")
         .include("resources/libfvad/src/vad")
